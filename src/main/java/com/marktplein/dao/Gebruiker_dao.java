@@ -1,16 +1,13 @@
 package com.marktplein.dao;
 
 import com.marktplein.domein.Gebruiker;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Alternative;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.TypedQuery;
 
 @Stateless
-@NoArgsConstructor
-
 public class Gebruiker_dao extends Dao<Gebruiker,Long> {
 
     public Gebruiker getByEmail(String email) {
@@ -20,4 +17,15 @@ public class Gebruiker_dao extends Dao<Gebruiker,Long> {
         return query.getSingleResult();
     }
 
+    public Gebruiker authenticate(String email, String wachtwoord) {
+        TypedQuery<Gebruiker> query = em.createNamedQuery(Gebruiker.Find_By_Email_Wachtwoord,Gebruiker.class);
+        query.setParameter("email",email);
+        query.setParameter("wachtwoord",wachtwoord);
+        Gebruiker gebruiker = query.getSingleResult();
+
+        if(gebruiker == null) throw new SecurityException("Ongeldig email/wachtwoord");
+
+        return gebruiker;
+
+    }
 }

@@ -70,4 +70,29 @@ public class GebruikersResourceIT {
         assertThat(message, containsString("sjwarkel"));
     }
 
+    @Test
+    public void saveGebruikerTest() {
+        Gebruiker g = Gebruiker.builder()
+                .naam("Stijn")
+                .email("sjwarkel@gmail.com")
+                .wachtwoord("WachtWoord8")
+                .isAkkoord(true)
+                .build();
+        Gebruiker g2 = Gebruiker.builder()
+                .naam("Piet")
+                .email("Pepernoot@gmail.com")
+                .wachtwoord("SinterKlaas")
+                .isAkkoord(true)
+                .build();
+
+        dao.save(g);
+        dao.save(g2);
+        Client http = ClientBuilder.newClient();
+        String message = http
+                .target(gebruikersResource + "/2")
+                .request().get(String.class);
+
+
+    }
+
 }

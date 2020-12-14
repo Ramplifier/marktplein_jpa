@@ -20,6 +20,6 @@ public abstract class Artikel {
     private BigDecimal prijs;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Gebruiker eigenaarId;
+    private Gebruiker gebruiker;
 
 }

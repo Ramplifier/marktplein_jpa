@@ -7,12 +7,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(name = Gebruiker.Find_By_Email_Wachtwoord , query = "SELECT g FROM Gebruiker g WHERE g.email = :email AND g.wachtwoord = :wachtwoord")
+})
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Gebruiker {
+
+    public static final String Find_By_Email_Wachtwoord = "Gebruiker.findByEmailAndPassword";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Dao<T, I> {
 
 
