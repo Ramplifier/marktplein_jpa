@@ -32,12 +32,15 @@ public class Gebruiker {
     @Column(nullable = false)
     private String wachtwoord;
 
+    @Embedded
     private Adres adres;
 
+    @Embedded
     private Bezorgopties bezorgopties;
 
     private boolean isAkkoord;
 
+    @Column(columnDefinition="tinyint(1) default 1")
     private boolean isActief;
 
 
