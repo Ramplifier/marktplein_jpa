@@ -2,7 +2,9 @@ package com.marktplein.resources;
 
 import com.marktplein.App;
 import com.marktplein.dao.Gebruiker_dao;
+import com.marktplein.dao.Product_Dao;
 import com.marktplein.domein.Gebruiker;
+import com.marktplein.domein.Product;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -23,21 +25,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 @RunWith(Arquillian.class)
-public class GebruikersResourceIT {
+public class ResourceIT {
 
     @ArquillianResource
     private URL deploymentURL;
 
     private String gebruikersResource;
+    private String productResource;
     private String gebruikersUri = "api/gebruikers";
+    private String productUri = "api/producten";
 
 
     @Inject
     Gebruiker_dao dao;
 
+    @Inject
+    Product_Dao p_dao;
+
     @Before
     public void setup() {
         gebruikersResource = deploymentURL + gebruikersUri;
+        productResource = deploymentURL + productUri;
 
     }
 
@@ -50,24 +58,6 @@ public class GebruikersResourceIT {
                 .addAsWebInfResource("test-beans.xml", "beans.xml");
         System.out.println(archive.toString(true));
         return archive;
-    }
-
-    @Test
-    public void getGebruikerTest() {
-        Gebruiker g = Gebruiker.builder()
-                .naam("Stijn")
-                .email("sjwarkel@gmail.com")
-                .wachtwoord("WachtWoord8")
-                .isAkkoord(true)
-                .build();
-
-        dao.save(g);
-        Client http = ClientBuilder.newClient();
-        String message = http
-                .target(gebruikersResource + "/1")
-                .request().get(String.class);
-
-        assertThat(message, containsString("sjwarkel"));
     }
 
     @Test
@@ -92,7 +82,28 @@ public class GebruikersResourceIT {
                 .target(gebruikersResource + "/2")
                 .request().get(String.class);
 
-
+        assertThat(message, containsString("Piet"));
+        assertThat(message, containsString("Pepernoot@gmail.com"));
     }
+
+    @Test
+    public void getAllProductenTest() {
+        Product p = Product.builder()
+                .naam("Bal")
+                .build();
+        Product p2 = Product.builder()
+                .naam("Pizzaoven")
+                .build();
+        p_dao.save(p);
+        p_dao.save(p2);
+        Client http = ClientBuilder.newClient();
+        String message = http
+                .target(productResource)
+                .request().get(String.class);
+
+        assertThat(message, containsString("Bal"));
+        assertThat(message, containsString("Pizzaoven"));
+    }
+
 
 }
