@@ -87,6 +87,26 @@ public class ResourceIT {
     }
 
     @Test
+    public void getProductenTest() {
+        Product p = Product.builder()
+                .naam("Bal")
+                .build();
+        Product p2 = Product.builder()
+                .naam("Pizzaoven")
+                .build();
+        p_dao.save(p);
+        p_dao.save(p2);
+        Client http = ClientBuilder.newClient();
+        String message = http
+                .target(productResource)
+                .request().get(String.class);
+
+        assertThat(message, containsString("Pizzaoven"));
+    }
+
+
+
+    @Test
     public void getAllProductenTest() {
         Product p = Product.builder()
                 .naam("Bal")
